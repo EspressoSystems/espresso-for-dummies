@@ -1,0 +1,64 @@
+services:
+  sequencer:
+    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20250411-patch6
+    stop_grace_period: 15m
+    entrypoint:
+      - tini
+      - -g
+      - --
+    command:
+      - /bin/sequencer-postgres
+      - --
+      - http
+      - --
+      - config
+      - --
+      - catchup
+      - --
+      - status
+      - --
+      - query
+      - --
+      - storage-sql
+    environment:
+      - RUST_LOG=warn,hotshot_libp2p_networking=off
+      #- RUST_LOG_FORMAT=json
+      - ESPRESSO_SEQUENCER_API_PORT=8088
+      - ESPRESSO_SEQUENCER_GENESIS_FILE=/genesis/decaf.toml
+      - ESPRESSO_SEQUENCER_API_PEERS=https://cache.decaf.testnet.espresso.network/,https://query-0.decaf.testnet.espresso.network/
+      - ESPRESSO_SEQUENCER_CONFIG_PEERS=https://cache.decaf.testnet.espresso.network/,https://query-0.decaf.testnet.espresso.network/
+      - ESPRESSO_SEQUENCER_STATE_PEERS=https://cache.decaf.testnet.espresso.network/,https://query-0.decaf.testnet.espresso.network/
+      - ESPRESSO_STATE_RELAY_SERVER_URL=https://state-relay.decaf.testnet.espresso.network
+      - ESPRESSO_SEQUENCER_CDN_ENDPOINT=cdn.decaf.testnet.espresso.network:1737
+      - ESPRESSO_SEQUENCER_LIBP2P_BOOTSTRAP_NODES=/dns/decaf-network-5dfb61bd543bfdd3.elb.us-east-2.amazonaws.com/udp/2007/quic-v1/p2p/12D3KooWP1XCQPYWn5vT7euC48aDsbuiG8869ky3ANCNmCvfVvTa,/dns/decaf-network-5dfb61bd543bfdd3.elb.us-east-2.amazonaws.com/udp/2006/quic-v1/p2p/12D3KooWR9xFqHYgz4pBxCzCAFCdDcczJKqhFgwC1wg8yRZiy8Ft,/dns/decaf-network-5dfb61bd543bfdd3.elb.us-east-2.amazonaws.com/udp/2005/quic-v1/p2p/12D3KooWJnHafr5U6qCdJ5MqS6U9NaoS2LDEVar7jaQvbwXzt4vx,/dns/decaf-network-5dfb61bd543bfdd3.elb.us-east-2.amazonaws.com/udp/2004/quic-v1/p2p/12D3KooWNg4QuisuNS7Vygd1Yv6ywebT88uzD3q7PtiWxLiUura8,/dns/decaf-network-5dfb61bd543bfdd3.elb.us-east-2.amazonaws.com/udp/2008/quic-v1/p2p/12D3KooWHtayvhWKfCnW6cuyMTknwGmVvm1fbQTSoyythpQQpWuW
+      #
+      # Postgres
+      #
+      - ESPRESSO_SEQUENCER_POSTGRES_HOST=postgres
+      - ESPRESSO_SEQUENCER_POSTGRES_USER=postgres
+      - ESPRESSO_SEQUENCER_POSTGRES_DATABASE=sequencer
+      - ESPRESSO_SEQUENCER_POSTGRES_USE_TLS=false
+      #
+      # Secrets
+      #
+      - ESPRESSO_SEQUENCER_L1_PROVIDER
+      - ESPRESSO_SEQUENCER_L1_WS_PROVIDER
+      - ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY
+      - ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY
+      - ESPRESSO_SEQUENCER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?error}
+    ports:
+      - 8088:8088
+    volumes:
+      - ./datastore:/store/sequencer
+  postgres:
+    image: postgres:17
+    stop_grace_period: 15m
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?error}
+      - POSTGRES_DB=sequencer
+    ports:
+      - 5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+volumes:
+  postgres:
