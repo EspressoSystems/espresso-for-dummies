@@ -1,6 +1,6 @@
 services:
   sequencer:
-    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20250411-patch6
+    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20250528
     stop_grace_period: 15m
     entrypoint:
       - tini
@@ -21,17 +21,27 @@ services:
       - --
       - storage-sql
     environment:
-      - ESPRESSO_SEQUENCER_EMBEDDED_DB=true
       - RUST_LOG=warn,hotshot_libp2p_networking=off
       #- RUST_LOG_FORMAT=json
       - ESPRESSO_SEQUENCER_API_PORT=8088
       - ESPRESSO_SEQUENCER_GENESIS_FILE=/genesis/decaf.toml
-      - ESPRESSO_SEQUENCER_API_PEERS=https://cache.decaf.testnet.espresso.network/,https://query-0.decaf.testnet.espresso.network/
-      - ESPRESSO_SEQUENCER_CONFIG_PEERS=https://cache.decaf.testnet.espresso.network/,https://query-0.decaf.testnet.espresso.network/
-      - ESPRESSO_SEQUENCER_STATE_PEERS=https://cache.decaf.testnet.espresso.network/,https://query-0.decaf.testnet.espresso.network/
+      - ESPRESSO_SEQUENCER_API_PEERS=https://cache.decaf.testnet.espresso.network/,https://query.decaf.testnet.espresso.network/
+      - ESPRESSO_SEQUENCER_CONFIG_PEERS=https://cache.decaf.testnet.espresso.network/,https://query.decaf.testnet.espresso.network/
+      - ESPRESSO_SEQUENCER_STATE_PEERS=https://cache.decaf.testnet.espresso.network/,https://query.decaf.testnet.espresso.network/
       - ESPRESSO_STATE_RELAY_SERVER_URL=https://state-relay.decaf.testnet.espresso.network
       - ESPRESSO_SEQUENCER_CDN_ENDPOINT=cdn.decaf.testnet.espresso.network:1737
       - ESPRESSO_SEQUENCER_LIBP2P_BOOTSTRAP_NODES=/dns/decaf-network-5dfb61bd543bfdd3.elb.us-east-2.amazonaws.com/udp/2007/quic-v1/p2p/12D3KooWP1XCQPYWn5vT7euC48aDsbuiG8869ky3ANCNmCvfVvTa,/dns/decaf-network-5dfb61bd543bfdd3.elb.us-east-2.amazonaws.com/udp/2006/quic-v1/p2p/12D3KooWR9xFqHYgz4pBxCzCAFCdDcczJKqhFgwC1wg8yRZiy8Ft,/dns/decaf-network-5dfb61bd543bfdd3.elb.us-east-2.amazonaws.com/udp/2005/quic-v1/p2p/12D3KooWJnHafr5U6qCdJ5MqS6U9NaoS2LDEVar7jaQvbwXzt4vx,/dns/decaf-network-5dfb61bd543bfdd3.elb.us-east-2.amazonaws.com/udp/2004/quic-v1/p2p/12D3KooWNg4QuisuNS7Vygd1Yv6ywebT88uzD3q7PtiWxLiUura8,/dns/decaf-network-5dfb61bd543bfdd3.elb.us-east-2.amazonaws.com/udp/2008/quic-v1/p2p/12D3KooWHtayvhWKfCnW6cuyMTknwGmVvm1fbQTSoyythpQQpWuW
+      #
+      # SQLite Pruned
+      #
+      - ESPRESSO_SEQUENCER_EMBEDDED_DB=true
+      - ESPRESSO_SEQUENCER_DATABASE_PRUNE=true
+      - ESPRESSO_SEQUENCER_POSTGRES_PRUNE=true
+      - ESPRESSO_SEQUENCER_PRUNER_PRUNING_THRESHOLD=10GB
+      - ESPRESSO_SEQUENCER_PRUNER_MINIMUM_RETENTION=1d
+      - ESPRESSO_SEQUENCER_PRUNER_TARGET_RETENTION=7d
+      - ESPRESSO_SEQUENCER_PRUNER_MAX_USAGE=8000
+      - ESPRESSO_SEQUENCER_PRUNER_INTERVAL=5m
       #
       # Secrets
       #
@@ -39,6 +49,17 @@ services:
       - ESPRESSO_SEQUENCER_L1_WS_PROVIDER
       - ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY
       - ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY
+      #
+      # Optional Node Identification
+      #
+      #- ESPRESSO_SEQUENCER_IDENTITY_NODE_NAME=Our-Node-1
+      #- ESPRESSO_SEQUENCER_IDENTITY_COMPANY_NAME=Example Company
+      #- ESPRESSO_SEQUENCER_IDENTITY_COMPANY_WEBSITE=https://example.com
+      #- ESPRESSO_SEQUENCER_IDENTITY_OPERATING_SYSTEM=Linux
+      #- ESPRESSO_SEQUENCER_IDENTITY_NETWORK_TYPE=AWS
+      #- ESPRESSO_SEQUENCER_IDENTITY_COUNTRY_CODE=US
+      #- ESPRESSO_SEQUENCER_IDENTITY_LATITUDE=0.0
+      #- ESPRESSO_SEQUENCER_IDENTITY_LONGITUDE=0.0
     ports:
       - 8088:8088
     volumes:
