@@ -1,6 +1,6 @@
 services:
   sequencer:
-    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20250528
+    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20250701
     stop_grace_period: 15m
     entrypoint:
       - tini
