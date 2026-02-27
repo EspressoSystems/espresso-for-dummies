@@ -26,6 +26,11 @@ services:
       - ESPRESSO_SEQUENCER_STATE_PEERS=https://cache.main.net.espresso.network/,https://query.main.net.espresso.network/
       - ESPRESSO_STATE_RELAY_SERVER_URL=https://state-relay.main.net.espresso.network
       - ESPRESSO_SEQUENCER_CDN_ENDPOINT=cdn.main.net.espresso.network:1737
+      #
+      # Libp2p
+      #
+      - ESPRESSO_SEQUENCER_LIBP2P_BIND_ADDRESS=0.0.0.0:4455
+      - ESPRESSO_SEQUENCER_LIBP2P_ADVERTISE_ADDRESS=${PUBLIC_IP:?error}:4455
       - ESPRESSO_SEQUENCER_LIBP2P_BOOTSTRAP_NODES=/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2004/quic-v1/p2p/12D3KooWLSztiG7tPdjJpPdN7H86SiVVBMRVjCT3AbtWGHRyUm2R,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2005/quic-v1/p2p/12D3KooWGR4tdbEcraDnuTx1uLuu3HkHX5y6Uq8sLbeuxvBXDRKn,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2006/quic-v1/p2p/12D3KooWA2y5h7szi1uP83HFXkF1z8wQxWMALXhNyoAUrZXnVcyV,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2007/quic-v1/p2p/12D3KooWFSP2pbRyM3DbjDHDTgX7k5M2PRrQ2Kcs9B7CJhN98fzW,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2008/quic-v1/p2p/12D3KooWMuQdPDCBEKSeM1u59yhv8ALjX6qkPrDp5QbsVyTyZenH,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2009/quic-v1/p2p/12D3KooW9tfmTcUtngZD5VHYwe48YqBYJeNUFDPnrFgo1YdWKXrv,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2010/quic-v1/p2p/12D3KooWPjrK2GUraBeikw72NQfu5v3tDhabfGuG1UfHiwrdBktn,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2011/quic-v1/p2p/12D3KooWBEEuHi91jPv43qDayau5p5Hj4o2rLPTUqSEPgLHeotVJ,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2012/quic-v1/p2p/12D3KooWA3UfhVbSuSCs8nkDgxo3dSfpzQ4EpZE61ia1VoQZLdLU
       #
       # Secrets
@@ -47,5 +52,7 @@ services:
       #- ESPRESSO_SEQUENCER_IDENTITY_LONGITUDE=0.0
     ports:
       - 8088:8088 # General HTTP
+      - 4455:4455/tcp # Libp2p
+      - 4455:4455/udp # Libp2p
     volumes:
       - ./datastore:/store/sequencer
