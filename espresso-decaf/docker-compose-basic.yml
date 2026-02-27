@@ -1,6 +1,6 @@
 services:
   sequencer:
-    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20250701
+    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20260223
     stop_grace_period: 15m
     entrypoint:
       - tini
@@ -11,9 +11,9 @@ services:
       - --
       - http
       - --
-      - config
-      - --
       - catchup
+      - --
+      - config
       - --
       - status
     environment:
@@ -30,10 +30,10 @@ services:
       #
       # Secrets
       #
-      - ESPRESSO_SEQUENCER_L1_PROVIDER
-      - ESPRESSO_SEQUENCER_L1_WS_PROVIDER
-      - ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY
-      - ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY
+      - ESPRESSO_SEQUENCER_L1_PROVIDER=${ESPRESSO_SEQUENCER_L1_PROVIDER:?error}
+      - ESPRESSO_SEQUENCER_L1_WS_PROVIDER=${ESPRESSO_SEQUENCER_L1_WS_PROVIDER:?error}
+      - ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY=${ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY:?error}
+      - ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY=${ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY:?error}
       #
       # Optional Node Identification
       #
@@ -46,6 +46,6 @@ services:
       #- ESPRESSO_SEQUENCER_IDENTITY_LATITUDE=0.0
       #- ESPRESSO_SEQUENCER_IDENTITY_LONGITUDE=0.0
     ports:
-      - 8088:8088
+      - 8088:8088 # General HTTP
     volumes:
       - ./datastore:/store/sequencer
