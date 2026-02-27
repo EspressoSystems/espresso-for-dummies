@@ -1,3 +1,6 @@
+#
+# WARNING: We recommend running `docker compose up -d postgres` and ensure postgres initializes itself before deploying the sequencer
+#
 services:
   sequencer:
     image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20260223
@@ -49,6 +52,8 @@ services:
       - ESPRESSO_SEQUENCER_POSTGRES_USER=postgres
       - ESPRESSO_SEQUENCER_POSTGRES_DATABASE=sequencer
       - ESPRESSO_SEQUENCER_POSTGRES_USE_TLS=false
+      - ESPRESSO_SEQUENCER_DATABASE_MAX_CONNECTIONS=40
+      - ESPRESSO_SEQUENCER_DATABASE_MIN_CONNECTIONS=10
       #
       # Pruning
       #
