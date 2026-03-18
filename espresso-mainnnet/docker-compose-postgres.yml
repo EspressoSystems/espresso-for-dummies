@@ -3,7 +3,7 @@
 #
 services:
   sequencer:
-    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20260302
+    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20260312
     stop_grace_period: 15m
     entrypoint:
       - tini
@@ -44,7 +44,7 @@ services:
       #
       - ESPRESSO_SEQUENCER_LIBP2P_BIND_ADDRESS=0.0.0.0:4455
       - ESPRESSO_SEQUENCER_LIBP2P_ADVERTISE_ADDRESS=${PUBLIC_IP:?error}:4455
-      - ESPRESSO_SEQUENCER_LIBP2P_BOOTSTRAP_NODES=/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2004/quic-v1/p2p/12D3KooWLSztiG7tPdjJpPdN7H86SiVVBMRVjCT3AbtWGHRyUm2R,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2005/quic-v1/p2p/12D3KooWGR4tdbEcraDnuTx1uLuu3HkHX5y6Uq8sLbeuxvBXDRKn,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2006/quic-v1/p2p/12D3KooWA2y5h7szi1uP83HFXkF1z8wQxWMALXhNyoAUrZXnVcyV,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2007/quic-v1/p2p/12D3KooWFSP2pbRyM3DbjDHDTgX7k5M2PRrQ2Kcs9B7CJhN98fzW,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2008/quic-v1/p2p/12D3KooWMuQdPDCBEKSeM1u59yhv8ALjX6qkPrDp5QbsVyTyZenH,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2009/quic-v1/p2p/12D3KooW9tfmTcUtngZD5VHYwe48YqBYJeNUFDPnrFgo1YdWKXrv,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2010/quic-v1/p2p/12D3KooWPjrK2GUraBeikw72NQfu5v3tDhabfGuG1UfHiwrdBktn,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2011/quic-v1/p2p/12D3KooWBEEuHi91jPv43qDayau5p5Hj4o2rLPTUqSEPgLHeotVJ,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2012/quic-v1/p2p/12D3KooWA3UfhVbSuSCs8nkDgxo3dSfpzQ4EpZE61ia1VoQZLdLU
+      - ESPRESSO_SEQUENCER_LIBP2P_BOOTSTRAP_NODES=/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2000/quic-v1/p2p/12D3KooWDKf3RMqrRu7jsbsskPGbdPyzVknmzM7KtMUbR9obHACu,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2001/quic-v1/p2p/12D3KooWK9YtnNqFQ51by23zv6PmGdzrADf8HhzsPRAbyAM5MZh5,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2002/quic-v1/p2p/12D3KooWJK5yrh2h7QDbk53mQR3mYQKTfkkiJfTkPkifi6RFmgQc,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2003/quic-v1/p2p/12D3KooWGgju14hJGLeGds5Ey8vTDC5E9AhcZm86S4gx4b1ZHANA,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2004/quic-v1/p2p/12D3KooWLSztiG7tPdjJpPdN7H86SiVVBMRVjCT3AbtWGHRyUm2R
       #
       # Postgres
       #
