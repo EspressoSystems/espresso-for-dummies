@@ -9,13 +9,17 @@ services:
     command:
       - /bin/sequencer-postgres
       - --
-      - http # Enables HTTP server necessary for Status API
+      # Enables HTTP server necessary for Status API
+      - http 
       - --
-      - catchup # Adds HTTP module for serving pending consensus state for other nodes
+      # Adds HTTP module for serving pending consensus state for other nodes
+      - catchup 
       - --
-      - config # Exposes config of this node over HTTP
+      # Exposes config of this node over HTTP
+      - config 
       - --
-      - status # Adds Status API endpoints exposing metrics
+      # Adds Status API endpoints exposing metrics
+      - status 
 
     environment:
       # Controls Rust logging level and module filters.
@@ -26,11 +30,11 @@ services:
 
       # API port used by the sequencer HTTP Status API services.
       # Mandatory: Yes
-      - ESPRESSO_SEQUENCER_API_PORT=8080
+      - ESPRESSO_SEQUENCER_API_PORT=8088
 
       # API bind address for the sequencer HTTP services inside the container.
       # Mandatory: Yes
-      - ESPRESSO_SEQUENCER_API_BIND_ADDRESS=0.0.0.0:8080
+      - ESPRESSO_SEQUENCER_API_BIND_ADDRESS=0.0.0.0:8088
 
       # Path to the Espresso mainnet genesis file.
       # Mandatory: yes for Mainnet 1
@@ -38,7 +42,7 @@ services:
       - ESPRESSO_SEQUENCER_GENESIS_FILE=/genesis/mainnet.toml
 
       # HTTP API peers used by this node to talk to existing mainnet peers.
-      # Mandatory: not explicitly stated as mandatory in the docs.
+      # Mandatory: Yes
       - ESPRESSO_SEQUENCER_API_PEERS=https://cache.main.net.espresso.network/,https://query.main.net.espresso.network/
 
       # Trusted config peers used to fetch config required to join the P2P network.
@@ -50,11 +54,11 @@ services:
       - ESPRESSO_SEQUENCER_STATE_PEERS=https://cache.main.net.espresso.network/,https://query.main.net.espresso.network/
 
       # URL of the state relay server used by the node.
-      # Mandatory: not explicitly called out as mandatory in the docs, but required by this published mainnet config.
+      # Mandatory: Yes
       - ESPRESSO_STATE_RELAY_SERVER_URL=https://state-relay.main.net.espresso.network
 
       # CDN endpoint used by the node for Espresso network data distribution.
-      # Mandatory: not explicitly called out as mandatory in the docs, but required by this published mainnet config.
+      # Mandatory: Yes
       - ESPRESSO_SEQUENCER_CDN_ENDPOINT=cdn.main.net.espresso.network:1737
 
       #
@@ -70,7 +74,7 @@ services:
       - ESPRESSO_SEQUENCER_LIBP2P_ADVERTISE_ADDRESS=${PUBLIC_IP:?error}:4455
 
       # Bootstrap libp2p peers used to join the network initially.
-      # Mandatory: No but it can help to solve peering issues if you experience any
+      # Mandatory: Yes
       - ESPRESSO_SEQUENCER_LIBP2P_BOOTSTRAP_NODES=/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2000/quic-v1/p2p/12D3KooWDKf3RMqrRu7jsbsskPGbdPyzVknmzM7KtMUbR9obHACu,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2001/quic-v1/p2p/12D3KooWK9YtnNqFQ51by23zv6PmGdzrADf8HhzsPRAbyAM5MZh5,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2002/quic-v1/p2p/12D3KooWJK5yrh2h7QDbk53mQR3mYQKTfkkiJfTkPkifi6RFmgQc,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2003/quic-v1/p2p/12D3KooWGgju14hJGLeGds5Ey8vTDC5E9AhcZm86S4gx4b1ZHANA,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2004/quic-v1/p2p/12D3KooWLSztiG7tPdjJpPdN7H86SiVVBMRVjCT3AbtWGHRyUm2R
 
       #
@@ -84,11 +88,6 @@ services:
       # Ethereum L1 WebSocket RPC provider used by the node.
       # Mandatory: Yes
       - ESPRESSO_SEQUENCER_L1_WS_PROVIDER=${ESPRESSO_SEQUENCER_L1_WS_PROVIDER:?error}
-
-      # Path to a file containing the node keys.
-      # Mandatory: yes if you are using key-file based configuration.
-      # Note: docs say you can use this instead of setting the two private key variables individually.
-      - ESPRESSO_SEQUENCER_KEY_FILE=/keys/0.env
 
       # Private BLS staking/consensus key.
       # Mandatory: yes if you are not using ESPRESSO_SEQUENCER_KEY_FILE.
@@ -135,10 +134,9 @@ services:
       #- ESPRESSO_SEQUENCER_IDENTITY_LONGITUDE=0.0
 
     ports:
-      - 8088:8080 # General HTTP
+      - 8088:8088 # General HTTP
       - 4455:4455/tcp # Libp2p
       - 4455:4455/udp # Libp2p
 
     volumes:
       - ./datastore:/store/sequencer
-      - ./keys/:/keys:ro # In case you are using a key-based configuration with ESPRESSO_SEQUENCER_KEY_FILE
