@@ -141,5 +141,4 @@ services:
 
     volumes:
       - ./datastore:/store/sequencer
-      - ./keys/:/keys:ro
-
+      - ./keys/:/keys:ro # In case you are using a key-based configuration with ESPRESSO_SEQUENCER_KEY_FILE
