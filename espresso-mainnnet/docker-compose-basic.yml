@@ -135,9 +135,11 @@ services:
       #- ESPRESSO_SEQUENCER_IDENTITY_LONGITUDE=0.0
 
     ports:
-      - 8088:8088 # General HTTP
+      - 8088:8080 # General HTTP
       - 4455:4455/tcp # Libp2p
       - 4455:4455/udp # Libp2p
 
     volumes:
       - ./datastore:/store/sequencer
+      - ./keys/:/keys:ro
+
