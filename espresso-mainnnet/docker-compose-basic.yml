@@ -1,6 +1,6 @@
 services:
   sequencer:
-    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20260407
+    image: ghcr.io/espressosystems/espresso-sequencer/sequencer:20260825
     stop_grace_period: 15m
     entrypoint:
       - tini
@@ -10,16 +10,16 @@ services:
       - /bin/sequencer-postgres
       - --
       # Enables HTTP server necessary for Status API
-      - http 
+      - http
       - --
       # Adds HTTP module for serving pending consensus state for other nodes
-      - catchup 
+      - catchup
       - --
       # Exposes config of this node over HTTP
-      - config 
+      - config
       - --
       # Adds Status API endpoints exposing metrics
-      - status 
+      - status
 
     environment:
       # Controls Rust logging level and module filters.
@@ -78,6 +78,12 @@ services:
       - ESPRESSO_SEQUENCER_LIBP2P_BOOTSTRAP_NODES=/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2000/quic-v1/p2p/12D3KooWDKf3RMqrRu7jsbsskPGbdPyzVknmzM7KtMUbR9obHACu,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2001/quic-v1/p2p/12D3KooWK9YtnNqFQ51by23zv6PmGdzrADf8HhzsPRAbyAM5MZh5,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2002/quic-v1/p2p/12D3KooWJK5yrh2h7QDbk53mQR3mYQKTfkkiJfTkPkifi6RFmgQc,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2003/quic-v1/p2p/12D3KooWGgju14hJGLeGds5Ey8vTDC5E9AhcZm86S4gx4b1ZHANA,/dns/main-network-d26f3636a4e56b65.elb.us-east-2.amazonaws.com/udp/2004/quic-v1/p2p/12D3KooWLSztiG7tPdjJpPdN7H86SiVVBMRVjCT3AbtWGHRyUm2R
 
       #
+      # Cliquenet
+      #
+      - ESPRESSO_NODE_CLIQUENET_BIND_ADDRESS=0.0.0.0:9977
+      - ESPRESSO_NODE_CLIQUENET_ADVERTISE_ADDRESS=${PUBLIC_IP:?error}:9977
+
+      #
       # L1 and keys
       #
 
@@ -89,13 +95,16 @@ services:
       # Mandatory: Yes
       - ESPRESSO_SEQUENCER_L1_WS_PROVIDER=${ESPRESSO_SEQUENCER_L1_WS_PROVIDER:?error}
 
-      # Private BLS staking/consensus key.
-      # Mandatory: yes if you are not using ESPRESSO_SEQUENCER_KEY_FILE.
-      - ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY=${ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY:?error}
+      # New mnemonic to so we only need one secret
+      # Mandatory: Yes
+      - ESPRESSO_NODE_KEY_MNEMONIC=${ESPRESSO_NODE_KEY_MNEMONIC:?error}
 
-      # Private Schnorr state key.
-      # Mandatory: yes if you are not using ESPRESSO_SEQUENCER_KEY_FILE.
-      - ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY=${ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY:?error}
+      #
+      # Old pre-mnemonic manual key process
+      #
+      #- ESPRESSO_NODE_PRIVATE_STAKING_KEY=${ESPRESSO_NODE_PRIVATE_STAKING_KEY:?error}
+      #- ESPRESSO_NODE_PRIVATE_STATE_KEY=${ESPRESSO_NODE_PRIVATE_STATE_KEY:?error}
+      #- ESPRESSO_NODE_PRIVATE_X25519_KEY=${ESPRESSO_NODE_PRIVATE_X25519_KEY:?error}
 
       #
       # Optional Node Identification
@@ -137,6 +146,7 @@ services:
       - 8088:8088 # General HTTP
       - 4455:4455/tcp # Libp2p
       - 4455:4455/udp # Libp2p
+      - 9977:9977/tcp # Cliquenet
 
     volumes:
       - ./datastore:/store/sequencer
