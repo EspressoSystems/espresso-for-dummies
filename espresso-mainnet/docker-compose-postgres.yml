@@ -3,7 +3,7 @@
 #
 services:
   node:
-    image: ghcr.io/espressosystems/espresso-network/espresso-node:0.6.3.14
+    image: ghcr.io/espressosystems/espresso-network/espresso-node:0.6.3.12
     stop_grace_period: 15m
     entrypoint:
       - tini
@@ -111,6 +111,6 @@ services:
     ports:
       - 5432
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres18:/var/lib/postgresql/18/docker
 volumes:
-  postgres:
+  postgres18:
